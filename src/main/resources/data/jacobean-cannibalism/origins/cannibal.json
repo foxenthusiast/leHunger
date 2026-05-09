@@ -1,0 +1,12 @@
+{
+  "name": "Cannibal",
+  "description": "You subsist on the flesh of the fallen. Normal food brings you no comfort — only rot sustains you.",
+  "icon": {
+    "id": "minecraft:rotten_flesh"
+  },
+  "impact": 2,
+  "powers": [
+    "jacobean-cannibalism:no_hunger_from_rotten_flesh",
+    "jacobean-cannibalism:normal_food_gives_hunger"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "type": "apoli:modify_loot",
+  "entity_condition": {
+    "type": "apoli:entity_type",
+    "entity_type": "minecraft:villager"
+  },
+  "loot_table": "jacobean-cannibalism:entities/villager_flesh",
+  "name": "Villager Harvest",
+  "description": "Villagers drop Rotten Flesh when killed."
+}

@@ -1,0 +1,42 @@
+{
+  "type": "apoli:modify_relationship",
+  "bientity_condition": {
+    "type": "apoli:target_condition",
+    "condition": {
+      "type": "apoli:or",
+      "conditions": [
+        {
+          "type": "apoli:entity_type",
+          "entity_type": "minecraft:iron_golem"
+        },
+        {
+          "type": "apoli:entity_type",
+          "entity_type": "minecraft:piglin"
+        },
+        {
+          "type": "apoli:entity_type",
+          "entity_type": "minecraft:zombified_piglin"
+        },
+        {
+          "type": "apoli:entity_type",
+          "entity_type": "minecraft:enderman"
+        },
+        {
+          "type": "apoli:entity_type",
+          "entity_type": "minecraft:wolf"
+        },
+        {
+          "type": "apoli:entity_type",
+          "entity_type": "minecraft:bee"
+        },
+        {
+          "type": "apoli:entity_type",
+          "entity_type": "minecraft:polar_bear"
+        }
+      ]
+    }
+  },
+  "relationship": "hostile",
+  "name": "Outcast",
+  "description": "Iron Golems, Piglins, and other neutral mobs attack you on sight."
+}

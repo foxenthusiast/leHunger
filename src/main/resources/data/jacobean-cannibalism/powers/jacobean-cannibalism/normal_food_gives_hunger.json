@@ -1,0 +1,37 @@
+{
+  "type": "apoli:modify_food",
+  "item_condition": {
+    "type": "apoli:and",
+    "conditions": [
+      {
+        "type": "apoli:food"
+      },
+      {
+        "type": "apoli:ingredient",
+        "ingredient": {
+          "item": "minecraft:rotten_flesh"
+        },
+        "inverted": true
+      }
+    ]
+  },
+  "food_modifier": {
+    "operation": "apoli:multiply_total_additive",
+    "value": -1.0
+  },
+  "saturation_modifier": {
+    "operation": "apoli:multiply_total_additive",
+    "value": -1.0
+  },
+  "entity_action": {
+    "type": "apoli:apply_effect",
+    "effect": {
+      "id": "minecraft:hunger",
+      "duration": 100,
+      "amplifier": 1,
+      "show_particles": true
+    }
+  },
+  "name": "Flesh Dependency",
+  "description": "Eating normal food does nothing and gives you Hunger."
+}
