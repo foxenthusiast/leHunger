@@ -3,7 +3,9 @@
 	"package": "com.jacobean.cannibalism.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"PlayerEatMixin"
+		"PlayerEatMixin",
+		"VillagerDeathMixin",
+		"NeutralMobTargetMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
