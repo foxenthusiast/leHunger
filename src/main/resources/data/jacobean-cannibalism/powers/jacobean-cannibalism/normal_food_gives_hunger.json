@@ -16,12 +16,12 @@
     ]
   },
   "food_modifier": {
-    "operation": "apoli:multiply_total_additive",
-    "value": -1.0
+    "operation": "multiply_total_additive",
+    "amount": -1.0
   },
   "saturation_modifier": {
-    "operation": "apoli:multiply_total_additive",
-    "value": -1.0
+    "operation": "multiply_total_additive",
+    "amount": -1.0
   },
   "entity_action": {
     "type": "apoli:apply_effect",

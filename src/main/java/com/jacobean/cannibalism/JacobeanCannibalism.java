@@ -12,6 +12,7 @@ public class JacobeanCannibalism implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ModPowers.register();
+		ModEvents.register();
 		LOGGER.info("Jacobean Cannibalism mod loaded. Bon appétit.");
 	}
 }
