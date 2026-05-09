@@ -1,75 +1,70 @@
 package com.jacobean.cannibalism.util;
 
 import net.minecraft.entity.player.PlayerEntity;
-
-import java.lang.reflect.Method;
+import net.minecraft.util.Identifier;
 
 public class OriginHelper {
 
+    private static final Identifier CANNIBAL_ORIGIN_ID =
+            Identifier.of("jacobean-cannibalism", "cannibal");
+
     /**
-     * We identify a Cannibal by checking if they have our marker power active.
+     * Checks if the player has the Cannibal origin by reading the Origins
+     * layer component via reflection. We look up the origin layer component,
+     * get the current origin for the "origins:origin" layer, and check its ID.
      *
-     * Pure reflection means we never import Origins classes directly, so this
-     * compiles even if Origins isn't on the compile classpath. Reflection works
-     * by looking up classes and methods by name as strings at runtime — slower
-     * than direct calls but fine for an occasional check like this.
-     *
-     * The flow:
-     * 1. Find the PowerHolderComponent class by name
-     * 2. Get its static KEY field (a ComponentKey used to retrieve the component from a player)
-     * 3. Call KEY.get(player) to get the component instance
-     * 4. Call getPowers() on that component to get the list of active powers
-     * 5. Check if any power's ID matches our marker
+     * This avoids depending on Apoli's power list (which changed between
+     * pre.1 and pre.2) and instead checks the origin ID directly, which
+     * is stable.
      */
     public static boolean isCannibal(PlayerEntity player) {
         try {
-            // Step 1: load the class
-            Class<?> componentClass = Class.forName(
-                    "io.github.apoli.apoli.component.PowerHolderComponent"
+            // Load the OriginComponent class
+            Class<?> originComponentClass = Class.forName(
+                    "io.github.apoli.apoli.component.OriginComponent"
             );
 
-            // Step 2: get the KEY field (it's a ComponentKey<PowerHolderComponent>)
-            var keyField = componentClass.getField("KEY");
-            Object key = keyField.get(null); // null because it's static
+            // Get the KEY field (ComponentKey<OriginComponent>)
+            var keyField = originComponentClass.getField("KEY");
+            Object key = keyField.get(null);
 
-            // Step 3: call key.get(player) — ComponentKey has a get(Provider) method
-            Method getMethod = key.getClass().getMethod("get", Object.class);
+            // Call key.get(player) to retrieve the component
+            java.lang.reflect.Method getMethod =
+                    key.getClass().getMethod("get", Object.class);
             Object component = getMethod.invoke(key, player);
 
-            // Step 4: call getPowers() — returns a Collection of Power instances
-            // Try getPowers() first, then getPowers(null) as fallback
-            Object powers;
-            try {
-                Method getPowers = component.getClass().getMethod("getPowers");
-                powers = getPowers.invoke(component);
-            } catch (NoSuchMethodException e) {
-                Method getPowers = component.getClass().getMethod("getPowers", Class.class);
-                powers = getPowers.invoke(component, (Object) null);
-            }
+            // Call getOrigin(layer) — we need to get the layer first
+            // Layer is identified by Identifier "origins:origin"
+            Class<?> registryClass = Class.forName(
+                    "io.github.apoli.apoli.registry.ApoliRegistries"
+            );
+            var layerRegistryField = registryClass.getField("ORIGIN_LAYER");
+            Object layerRegistry = layerRegistryField.get(null);
 
-            // Step 5: stream through and check IDs
-            Iterable<?> powerList = (Iterable<?>) powers;
-            String markerId = "jacobean-cannibalism:no_hunger_from_rotten_flesh";
+            // Get the layer from the registry
+            java.lang.reflect.Method getLayerMethod =
+                    layerRegistry.getClass().getMethod("get", Identifier.class);
+            Object layer = getLayerMethod.invoke(
+                    layerRegistry, Identifier.of("origins", "origin")
+            );
 
-            for (Object power : powerList) {
-                // Powers have getId() or getType().getIdentifier() depending on version
-                // Try getId() first
-                try {
-                    Method getId = power.getClass().getMethod("getId");
-                    Object id = getId.invoke(power);
-                    if (markerId.equals(id.toString())) return true;
-                } catch (NoSuchMethodException e) {
-                    Method getType = power.getClass().getMethod("getType");
-                    Object type = getType.invoke(power);
-                    Method getIdentifier = type.getClass().getMethod("getIdentifier");
-                    Object id = getIdentifier.invoke(type);
-                    if (markerId.equals(id.toString())) return true;
-                }
-            }
+            if (layer == null) return false;
 
-            return false;
+            // Call component.getOrigin(layer)
+            java.lang.reflect.Method getOriginMethod =
+                    component.getClass().getMethod("getOrigin", layer.getClass());
+            Object origin = getOriginMethod.invoke(component, layer);
+
+            if (origin == null) return false;
+
+            // Get the origin's identifier
+            java.lang.reflect.Method getIdMethod =
+                    origin.getClass().getMethod("getIdentifier");
+            Object id = getIdMethod.invoke(origin);
+
+            return CANNIBAL_ORIGIN_ID.equals(id);
+
         } catch (Exception e) {
-            // Any failure (class not found, wrong version, etc.) = not a cannibal
             return false;
         }
     }

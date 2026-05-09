@@ -4,8 +4,7 @@
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"PlayerEatMixin",
-		"VillagerDeathMixin",
-		"NeutralMobTargetMixin"
+		"VillagerDeathMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

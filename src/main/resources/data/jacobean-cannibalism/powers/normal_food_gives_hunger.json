@@ -27,8 +27,8 @@
     "type": "apoli:apply_effect",
     "effect": {
       "id": "minecraft:hunger",
-      "duration": 100,
-      "amplifier": 1,
+      "duration": 600,
+      "amplifier": 3,
       "show_particles": true
     }
   },
